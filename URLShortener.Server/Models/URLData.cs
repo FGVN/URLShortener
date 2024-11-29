@@ -11,7 +11,9 @@ public class URLData
     public DateTime CreatedAt { get; set; }
     public bool IsDeleted { get; set; }
     public UrlMetadata? Metadata { get; set; }
-    public DateTime? LastFetchedAt { get; set; } 
+    public DateTime? LastFetchedAt { get; set; }
+
+    public User Author { get; set; } = null!;
 
     public URLData(string originUrl, string url, int authorId)
     {

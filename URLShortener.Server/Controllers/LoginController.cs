@@ -6,7 +6,7 @@ using URLShortener.Server.Services;
 using URLShortener.Server.Requests;
 
 [ApiController]
-[Route("api/auth")]
+[Route(GlobalConstants.ApiPathPrefix+"/auth")]
 public class AuthController : ControllerBase
 {
     private readonly JwtTokenService _jwtTokenService;

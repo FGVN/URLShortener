@@ -20,19 +20,26 @@ public class JwtTokenService
         _audience = audience;
         _secretKey = secretKey;
     }
-
     public string GenerateToken(User user, int expirationMinutes = 60)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
+
+        if (user is Admin)
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role, user is Admin ? "Admin" : "AuthorizedUser")
-        };
+            claims.Add(new Claim(ClaimTypes.Role, "Admins"));
+        }
+        else if (user is AuthorizedUser)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "AuthorizedUsers"));
+        }
 
         var token = new JwtSecurityToken(
             issuer: _issuer,
@@ -44,4 +51,5 @@ public class JwtTokenService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 }

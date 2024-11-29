@@ -13,7 +13,7 @@ public class UrlMetadataService
         _configuration = configuration;
     }
 
-    public async Task<UrlMetadata> FetchMetadata(string url)
+    public async Task<UrlMetadata> FetchMetadataAsync(string url)
     {
         try
         {
