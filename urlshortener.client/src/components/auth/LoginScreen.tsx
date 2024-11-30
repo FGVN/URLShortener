@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axiosInstance from '../utils/axiosInstance';
+import { loginRequest } from '../../api/apiService'; // Updated import path
 import './LoginScreen.css'; // Add this for the external CSS file
+import { useNavigate } from 'react-router-dom';
 
 interface LoginScreenProps {
     onLogin: () => void;
@@ -10,24 +11,18 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         try {
-            const response = await axiosInstance.post('/auth/login', {
-                login: email,
-                password,
-            });
+            const response = await loginRequest(email, password);
 
             if (response.status === 200) {
                 console.log('Login successful:', response.data);
 
-                // Save token to localStorage
-                if (response.data.token) {
-                    localStorage.setItem('authToken', response.data.token);
-                    console.log('Token saved to localStorage.');
-                }
-
+                // Token handling is already done in the `postRequest` function
                 onLogin();
+                navigate("/");
             } else {
                 setError('Login failed. Please check your credentials and try again.');
             }

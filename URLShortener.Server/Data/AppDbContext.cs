@@ -15,10 +15,17 @@ public class AppDbContext : DbContext
     public DbSet<Admin> Admins { get; set; }
     public DbSet<AuthorizedUser> AuthorizedUsers { get; set; }
     public DbSet<URLData> URLs { get; set; }
+    public DbSet<AboutUs> AboutUs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<AboutUs>()
+            .ToTable("AboutUs")
+            .HasOne(a => a.Author)
+            .WithMany();
+
 
         modelBuilder.Entity<User>()
             .ToTable("Users")
@@ -28,12 +35,11 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<URLData>()
                .ToTable("URLs")
-               .HasOne(u => u.Author) // Navigation property to User
-               .WithMany() // Adjust this to the correct navigation property in the User entity if needed.
+               .HasOne(u => u.Author) 
+               .WithMany() 
                .HasForeignKey(u => u.AuthorId)
-               .OnDelete(DeleteBehavior.Cascade); // Adjust the delete behavior as required.
+               .OnDelete(DeleteBehavior.Cascade); 
 
-        // Configuring the owned UrlMetadata type within URLData.
         modelBuilder.Entity<URLData>()
             .OwnsOne(u => u.Metadata);
 

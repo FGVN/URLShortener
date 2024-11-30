@@ -1,6 +1,7 @@
+// src/components/AddUrlModal.tsx
 import React, { FC, useState } from 'react';
-import axiosInstance from '../utils/axiosInstance';
-import './UrlDetails.css';
+import { addUrlRequest } from '../../api/apiService'; // Updated import path
+import './AddUrlModal.css';
 
 interface AddUrlModalProps {
     isOpen: boolean;
@@ -15,10 +16,7 @@ const AddUrlModal: FC<AddUrlModalProps> = ({ isOpen, onClose, onAdd }) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axiosInstance.post('/UrlShortener', {
-                OriginUrl: originUrl,
-                Url: url,
-            });
+            const response = await addUrlRequest(originUrl, url);
             alert('URL added successfully!');
             onAdd(response.data); // Optional callback for updates
             onClose();

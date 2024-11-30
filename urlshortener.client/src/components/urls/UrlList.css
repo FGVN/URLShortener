@@ -1,0 +1,26 @@
+.url-list-container {
+    max-width: 100%; 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.url-list-header {
+    display: flex;
+    justify-content: center; /* Center the header and button */
+    align-items: center;
+}
+
+.url-list-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}

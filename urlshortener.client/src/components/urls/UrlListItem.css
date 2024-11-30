@@ -1,0 +1,45 @@
+.url-list-item {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    width: 800px; /* Increase the width */
+    margin-left: auto; /* Center the card horizontally */
+    margin-right: auto; /* Center the card horizontally */
+}
+
+    .url-list-item:hover {
+        border-color: #646cff;
+    }
+
+.url-item-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .url-item-content p {
+        margin: 0;
+        padding: 5px 10px;
+        width: 200px; /* Fixed width for easier alignment */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+    }
+
+    .url-item-content strong {
+        font-weight: 600;
+        margin-right: 5px;
+    }
+
+.url-item-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}

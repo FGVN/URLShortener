@@ -1,6 +1,8 @@
+// src/components/RegisterScreen.tsx
 import React, { useState } from 'react';
-import { postRequest } from '../utils/axiosInstance';
-import './RegisterScreen.css'; // Add this for the external CSS file
+import { postRequest } from '../../api/apiService'; // Updated import path
+import './RegisterScreen.css';
+import { useNavigate } from 'react-router-dom';
 
 interface RegisterScreenProps {
     onRegister: () => void;
@@ -12,6 +14,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
     const [passwordState, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const handleRegister = async () => {
         if (passwordState !== confirmPassword) {
@@ -28,13 +31,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
 
             if (response.status === 201) {
                 console.log('Registration successful:', response.data);
-
                 const token = response.data.token;
                 if (token) {
                     localStorage.setItem('authToken', token);
                 }
 
                 onRegister();
+                navigate("/");
             } else {
                 setError('Registration failed. Please try again.');
             }

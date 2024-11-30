@@ -1,39 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axiosInstance from '../utils/axiosInstance';
+import { useParams, useNavigate } from 'react-router-dom';
+import { fetchUrlDetails, UrlDetailsDto } from '../../api/apiService';
 import './UrlDetails.css';
-
-interface UrlMetadata {
-    title?: string;
-    description?: string;
-    image?: string;
-}
-
-interface UrlDetailsDto {
-    id: number;
-    url: string;
-    originUrl: string;
-    createdAt: string;
-    metadata?: UrlMetadata;
-    username?: string;
-}
+import DeleteButton from '../common/DeleteButton';
+import { getUserIdFromToken } from '../../utils/auth'
 
 const UrlDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [urlDetails, setUrlDetails] = useState<UrlDetailsDto | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
+
+    const currentUserSub = getUserIdFromToken();
 
     useEffect(() => {
-        const fetchUrlDetails = async () => {
+        const loadUrlDetails = async () => {
             try {
-                const response = await axiosInstance.get(`/UrlShortener/${id}`);
-                setUrlDetails(response.data);
-            } catch (err) {
-                setError('Failed to fetch URL details. Please try again later.');
+                if (id) {
+                    const details = await fetchUrlDetails(id);
+                    setUrlDetails(details);
+                }
+            } catch (err: any) {
+                setError(err.message);
             }
         };
 
-        fetchUrlDetails();
+        loadUrlDetails();
     }, [id]);
 
     if (error) {
@@ -44,9 +36,10 @@ const UrlDetails: React.FC = () => {
         return <div>Loading...</div>;
     }
 
+    const isAuthorized = currentUserSub === urlDetails.authorId;
+
     return (
         <div className="url-details-container">
-
             <h2>URL Details</h2>
             <div className="url-details-top">
                 <p><strong>Short URL:</strong> {urlDetails.url}</p>
@@ -60,7 +53,6 @@ const UrlDetails: React.FC = () => {
                 <div>
                     <h3>Metadata</h3>
                     <div className="url-details-metadata">
-
                         <div className="metadata-info">
                             {urlDetails.metadata.title && <p><strong>Title:</strong> {urlDetails.metadata.title}</p>}
                             {urlDetails.metadata.description && <p><strong>Description:</strong> {urlDetails.metadata.description}</p>}
@@ -76,6 +68,14 @@ const UrlDetails: React.FC = () => {
                         )}
                     </div>
                 </div>
+            )}
+
+            {isAuthorized && (
+                <DeleteButton
+                    urlId={urlDetails.id}
+                    onDeleteSuccess={() => navigate("/")}
+                    onDeleteError={(message: string) => setError(message)}
+                />
             )}
         </div>
     );

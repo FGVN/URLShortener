@@ -10,4 +10,5 @@ public class UrlDetailsDto
     public DateTime CreatedAt { get; set; }
     public UrlMetadata? Metadata { get; set; }
     public string? Username { get; set; }
+    public int? AuthorId { get; set; }
 }

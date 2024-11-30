@@ -36,17 +36,6 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-
-export const fetchUrls = async (page: number, pageSize: number) => {
-    try {
-        const response = await axiosInstance.get(`/UrlShortener?page=${page}&pageSize=${pageSize}`);
-        return response.data; // Assuming the API returns data in the expected format
-    } catch (error) {
-        console.error('Failed to fetch URLs:', error);
-        throw error;
-    }
-};
-
 export const postRequest = async (url: string, data: object) => {
     try {
         const response = await axiosInstance.post(url, data);

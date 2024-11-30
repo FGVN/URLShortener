@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import LoginScreen from './components/LoginScreen';
-import RegisterScreen from './components/RegisterScreen';
-import Header from './components/Header';
-import UrlList from './components/UrlList';
-import UrlDetails from './components/UrlDetails';
+import LoginScreen from './components/auth/LoginScreen';
+import RegisterScreen from './components/auth/RegisterScreen';
+import Header from './components/common/Header';
+import UrlList from './components/urls/UrlList';
+import UrlDetails from './components/urls/UrlDetails';
+import AboutUs from './components/common/AboutUs';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-    const [showRegister, setShowRegister] = useState<boolean>(false);
     const [authToken, setAuthToken] = useState<string | null>(null);
 
     useEffect(() => {
@@ -26,21 +26,21 @@ function App() {
                 <Header
                     isLoggedIn={isLoggedIn}
                     authToken={authToken}
-                    onLoginClick={() => setShowRegister(false)}
-                    onRegisterClick={() => setShowRegister(true)}
+                    onLoginClick={() => setIsLoggedIn(false)}
+                    onRegisterClick={() => setIsLoggedIn(false)}
                 />
-                {!isLoggedIn ? (
-                    showRegister ? (
-                        <RegisterScreen onRegister={() => setIsLoggedIn(true)} />
-                    ) : (
-                        <LoginScreen onLogin={() => setIsLoggedIn(true)} />
-                    )
-                ) : (
-                    <Routes>
-                        <Route path="/" element={<UrlList />} />
-                        <Route path="/url-details/:id" element={<UrlDetails />} />
-                    </Routes>
-                )}
+                <Routes>
+                    {!isLoggedIn && (
+                        <>
+                            <Route path="/login" element={<LoginScreen onLogin={() => setIsLoggedIn(true)} />} />
+                            <Route path="/register" element={<RegisterScreen onRegister={() => setIsLoggedIn(true)} />} />
+                        </>
+                    ) 
+                    }
+                    <Route path="*" element={<UrlList />} />
+                    <Route path="/url-details/:id" element={<UrlDetails />} />
+                    <Route path="/about-us" element={<AboutUs/>} />
+                </Routes>
             </div>
         </Router>
     );

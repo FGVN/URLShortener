@@ -58,7 +58,6 @@ public class UrlShortenerController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> GetUrls([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] int? authorId = null)
     {
         if (page < 1 || pageSize < 1)
@@ -71,7 +70,8 @@ public class UrlShortenerController : ControllerBase
             query = query.Where(x => x.AuthorId == authorId.Value);
         }
 
-        var totalRecords = await query.CountAsync();
+        var totalRecords = await query.Where(x => !x.IsDeleted).CountAsync();
+
         var urls = await query
             .Where(x => !x.IsDeleted)
             .OrderByDescending(x => x.CreatedAt)
@@ -81,9 +81,11 @@ public class UrlShortenerController : ControllerBase
             {
                 Id = x.Id,
                 Url = x.Url,
+                AuthorId = x.AuthorId,
                 CreatedAt = x.CreatedAt
             })
             .ToListAsync();
+
 
         var result = new PagedResult<UrlGlobalDto>
         {
@@ -98,7 +100,6 @@ public class UrlShortenerController : ControllerBase
 
 
     [HttpGet("{id}")]
-    [Authorize]
     public async Task<IActionResult> GetUrlDetails(int id)
     {
         var url = await _context.URLs
@@ -116,7 +117,8 @@ public class UrlShortenerController : ControllerBase
             OriginUrl = url.OriginUrl,
             CreatedAt = url.CreatedAt,
             Metadata = url.Metadata,
-            Username = url.Author?.UserName 
+            Username = url.Author?.UserName, 
+            AuthorId = url.AuthorId
         };
 
         return Ok(urlDetailsDto);
@@ -133,11 +135,11 @@ public class UrlShortenerController : ControllerBase
         if (url == null || url.IsDeleted)
             return NotFound("URL not found or already deleted.");
 
-        var userId = int.Parse(User.FindFirst("sub")?.Value ?? "0");
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         var isAdmin = User.IsInRole("Admin");
 
         if (url.AuthorId != userId && !isAdmin)
-            return Forbid("You are not authorized to delete this URL.");
+            return BadRequest("You are not authorized to delete this URL.");
 
         url.IsDeleted = true;
         await _context.SaveChangesAsync();
