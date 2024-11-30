@@ -5,7 +5,7 @@ using URLShortener.Features.Requests;
 using URLShortener.Infrastructure.Data;
 using URLShortener.Services;
 
-namespace URLShortener.Server.Handlers;
+namespace URLShortener.Features.Handlers;
 
 public class RegisterHandler : IRequestHandler<RegisterRequest, IActionResult>
 {

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using URLShortener.Server.Handlers;
+using URLShortener.Features.Handlers;
 using URLShortener.Services;
 using URLShortener.Infrastructure.Data;
 using URLShortener.Infrastructure.MiddleWares;

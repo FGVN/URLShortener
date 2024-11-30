@@ -8,9 +8,13 @@ namespace URLShortener.Services;
 
 public class JwtTokenService
 {
-    private readonly string _issuer;
-    private readonly string _audience;
-    private readonly string _secretKey;
+    private readonly string? _issuer;
+    private readonly string? _audience;
+    private readonly string? _secretKey;
+
+    public JwtTokenService()
+    {
+    }
 
     public JwtTokenService(string issuer, string audience, string secretKey)
     {

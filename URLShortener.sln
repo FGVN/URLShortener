@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Server", "URLShortener.Server\URLShortener.Server.csproj", "{098E004C-FD42-4E40-AAA7-17EFF1F524F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.Server", "URLShortener.Server\URLShortener.Server.csproj", "{098E004C-FD42-4E40-AAA7-17EFF1F524F2}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "urlshortener.client", "urlshortener.client\urlshortener.client.esproj", "{90A6D5FD-9758-46EC-B0BF-B2C648C7BE6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Core", "URLShortener.Core\URLShortener.Core.csproj", "{D150C5A7-879E-42D8-B7B6-C850BE02E0E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.Core", "URLShortener.Core\URLShortener.Core.csproj", "{D150C5A7-879E-42D8-B7B6-C850BE02E0E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Services", "URLShortener.Services\URLShortener.Services.csproj", "{8F0C65E4-281B-44D8-BCE8-31C4E43E9489}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.Services", "URLShortener.Services\URLShortener.Services.csproj", "{8F0C65E4-281B-44D8-BCE8-31C4E43E9489}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Infrastructure", "URLShortener.Infrastructure\URLShortener.Infrastructure.csproj", "{FA80F72C-ABDF-403B-9346-A88E7C32AAF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "URLShortener.Infrastructure", "URLShortener.Infrastructure\URLShortener.Infrastructure.csproj", "{FA80F72C-ABDF-403B-9346-A88E7C32AAF6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Features", "URLShortener.Features\URLShortener.Features.csproj", "{9EA13830-717F-4B38-AEE5-27F5B4A16F05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Tests", "URLShortener.Tests\URLShortener.Tests.csproj", "{C30B0F28-DD3A-4642-91CF-6A4DDB2A3A4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{9EA13830-717F-4B38-AEE5-27F5B4A16F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EA13830-717F-4B38-AEE5-27F5B4A16F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EA13830-717F-4B38-AEE5-27F5B4A16F05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C30B0F28-DD3A-4642-91CF-6A4DDB2A3A4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C30B0F28-DD3A-4642-91CF-6A4DDB2A3A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C30B0F28-DD3A-4642-91CF-6A4DDB2A3A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C30B0F28-DD3A-4642-91CF-6A4DDB2A3A4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

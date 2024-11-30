@@ -6,14 +6,19 @@ namespace URLShortener.Services;
 
 public class UrlMetadataService
 {
-    private readonly HttpClient _httpClient;
-    private readonly IConfiguration _configuration;
+    private readonly HttpClient? _httpClient;
+    private readonly IConfiguration? _configuration;
 
     public UrlMetadataService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
         _configuration = configuration;
     }
+
+    public UrlMetadataService()
+    {
+    }
+
 
     public async Task<UrlMetadata> FetchMetadataAsync(string url)
     {

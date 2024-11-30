@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using URLShortener.Infrastructure.Data;
 using URLShortener.Services;
 
-namespace URLShortener.Server.Handlers;
+namespace URLShortener.Features.Handlers;
 
 public class CreateAdminHandler : IRequestHandler<CreateAdminRequest, IActionResult>
 {

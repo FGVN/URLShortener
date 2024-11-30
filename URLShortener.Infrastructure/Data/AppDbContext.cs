@@ -9,6 +9,10 @@ public class AppDbContext : DbContext
         : base(options)
     {
     }
+    public AppDbContext()
+        : base()
+    {
+    }
 
     public DbSet<User> Users { get; set; }
     public DbSet<Admin> Admins { get; set; }

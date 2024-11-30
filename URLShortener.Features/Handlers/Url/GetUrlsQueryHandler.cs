@@ -4,7 +4,7 @@ using URLShortener.Features.Requests;
 using URLShortener.Core.Dtos;
 using URLShortener.Infrastructure.Data;
 
-namespace URLShortener.Server.Features.Urls;
+namespace URLShortener.Features.Urls;
 
 public class GetUrlsQueryHandler : IRequestHandler<GetUrlsQuery, PagedResult<UrlGlobalDto>>
 {
