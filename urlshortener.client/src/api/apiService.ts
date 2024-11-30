@@ -73,6 +73,22 @@ export const loginRequest = async (email: string, password: string) => {
     }
 };
 
+export const registerRequest = async (data: object) => {
+    const url = '/auth/register';
+    try {
+        const response = await axiosInstance.post(url, data);
+        if (response.data && response.data.token) {
+            localStorage.setItem('authToken', response.data.token);
+            console.log('Token saved to localStorage successfully.');
+        }
+        return response;
+    } catch (error) {
+        console.error(`Failed to post data to ${url}:`, error);
+        throw error;
+    }
+};
+
+
 export const addUrlRequest = async (originUrl: string, url: string) => {
     try {
         const response = await postRequest('/UrlShortener', { OriginUrl: originUrl, Url: url });

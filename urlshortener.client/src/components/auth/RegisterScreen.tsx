@@ -1,6 +1,6 @@
 // src/components/RegisterScreen.tsx
 import React, { useState } from 'react';
-import { postRequest } from '../../api/apiService'; // Updated import path
+import { registerRequest } from '../../api/apiService'; // Import postRequest from apiService
 import './RegisterScreen.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
         }
 
         try {
-            const response = await postRequest('/auth/register', {
+            const response = await registerRequest({
                 login: email,
                 username,
                 password: passwordState,

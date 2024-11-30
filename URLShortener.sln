@@ -7,6 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Server", "URLS
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "urlshortener.client", "urlshortener.client\urlshortener.client.esproj", "{90A6D5FD-9758-46EC-B0BF-B2C648C7BE6C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Core", "URLShortener.Core\URLShortener.Core.csproj", "{D150C5A7-879E-42D8-B7B6-C850BE02E0E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Services", "URLShortener.Services\URLShortener.Services.csproj", "{8F0C65E4-281B-44D8-BCE8-31C4E43E9489}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Infrastructure", "URLShortener.Infrastructure\URLShortener.Infrastructure.csproj", "{FA80F72C-ABDF-403B-9346-A88E7C32AAF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLShortener.Features", "URLShortener.Features\URLShortener.Features.csproj", "{9EA13830-717F-4B38-AEE5-27F5B4A16F05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +31,22 @@ Global
 		{90A6D5FD-9758-46EC-B0BF-B2C648C7BE6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90A6D5FD-9758-46EC-B0BF-B2C648C7BE6C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{90A6D5FD-9758-46EC-B0BF-B2C648C7BE6C}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D150C5A7-879E-42D8-B7B6-C850BE02E0E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D150C5A7-879E-42D8-B7B6-C850BE02E0E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D150C5A7-879E-42D8-B7B6-C850BE02E0E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D150C5A7-879E-42D8-B7B6-C850BE02E0E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F0C65E4-281B-44D8-BCE8-31C4E43E9489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F0C65E4-281B-44D8-BCE8-31C4E43E9489}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F0C65E4-281B-44D8-BCE8-31C4E43E9489}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F0C65E4-281B-44D8-BCE8-31C4E43E9489}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA80F72C-ABDF-403B-9346-A88E7C32AAF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA80F72C-ABDF-403B-9346-A88E7C32AAF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA80F72C-ABDF-403B-9346-A88E7C32AAF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA80F72C-ABDF-403B-9346-A88E7C32AAF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EA13830-717F-4B38-AEE5-27F5B4A16F05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EA13830-717F-4B38-AEE5-27F5B4A16F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EA13830-717F-4B38-AEE5-27F5B4A16F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EA13830-717F-4B38-AEE5-27F5B4A16F05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,11 +1,11 @@
-using URLShortener.Server.Auth;
-using URLShortener.Server.Data;
-using URLShortener.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using URLShortener.Server.Middlewares;
+using URLShortener.Server.Handlers;
+using URLShortener.Services;
+using URLShortener.Infrastructure.Data;
+using URLShortener.Infrastructure.MiddleWares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +19,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddHttpClient<UrlMetadataService>();
 builder.Services.AddSingleton<EncryptionService>();
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<RegisterHandler>());
+
 builder.Services.AddSingleton(new JwtTokenService(
-    builder.Configuration["Jwt:Issuer"],
-    builder.Configuration["Jwt:Audience"],
-    builder.Configuration["Jwt:SecretKey"]
+    builder.Configuration["Jwt:Issuer"]!,
+    builder.Configuration["Jwt:Audience"]!,
+    builder.Configuration["Jwt:SecretKey"]!
 ));
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -37,7 +39,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"] ?? string.Empty))
         };
     });
 
@@ -47,20 +49,20 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AuthorizedUsers", policy => policy.RequireRole("AuthorizedUsers"));
 });
 
-// Add CORS configuration to allow all origins
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()  // Allow all origins
-              .AllowAnyMethod()  // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
-              .AllowAnyHeader(); // Allow all headers
+        policy.AllowAnyOrigin()  
+              .AllowAnyMethod()  
+              .AllowAnyHeader(); 
     });
 });
 
 var app = builder.Build();
 
-// Apply CORS policy globally
 app.UseCors("AllowAll");
 
 app.UseDefaultFiles();

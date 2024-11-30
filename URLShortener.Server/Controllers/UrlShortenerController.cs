@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using URLShortener.Server.Data;
-using URLShortener.Server.Dtos;
-using URLShortener.Server.Models;
-using URLShortener.Server.Services;
+using URLShortener.Features.Requests;
 
 namespace URLShortener.Server.Controllers;
 
@@ -13,88 +10,33 @@ namespace URLShortener.Server.Controllers;
 [Route(GlobalConstants.ApiPathPrefix+"/[controller]")]
 public class UrlShortenerController : ControllerBase
 {
-    private readonly AppDbContext _context;
-    private readonly UrlMetadataService _metadataService;
+    private readonly IMediator _mediator;
 
-    public UrlShortenerController(AppDbContext context, UrlMetadataService metadataService)
+    public UrlShortenerController(IMediator mediator)
     {
-        _context = context;
-        _metadataService = metadataService;
+        _mediator = mediator;
     }
 
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreateShortenedUrl([FromBody] CreateUrlRequest request)
     {
-        foreach (var claim in User.Claims)
-        {
-            Console.WriteLine($"Claim type: {claim.Type}, Value: {claim.Value}");
-        }
-
-        if (string.IsNullOrEmpty(request.OriginUrl) || string.IsNullOrEmpty(request.Url))
-            return BadRequest("Original URL and shortened URL are required.");
-
-        if (_context.URLs.Any(x => x.Url == request.Url && x.IsDeleted == false))
-            return BadRequest("Sorry, that URL has already been used to shorten the link.");
-
-        if (_context.URLs.Any(x => x.OriginUrl == request.OriginUrl && x.IsDeleted == false))
-            return BadRequest("Sorry, that URL has already been shortened.");
-
-        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-
-        Console.WriteLine("ID: " + userId);
-        var urlData = new URLData(request.OriginUrl, request.Url, userId);
-
-        var metadata = await _metadataService.FetchMetadataAsync(request.OriginUrl);
-        if (metadata != null)
-        {
-            urlData.UpdateMetadata(metadata);
-        }
-
-        _context.URLs.Add(urlData);
-        await _context.SaveChangesAsync();
-
-        return Ok(urlData);
+        var result = await _mediator.Send(request);
+        return result;
     }
 
     [HttpGet]
+    [HttpGet]
     public async Task<IActionResult> GetUrls([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] int? authorId = null)
     {
-        if (page < 1 || pageSize < 1)
-            return BadRequest("Page and pageSize must be greater than zero.");
-
-        var query = _context.URLs.AsQueryable();
-
-        if (authorId.HasValue)
+        var query = new GetUrlsQuery
         {
-            query = query.Where(x => x.AuthorId == authorId.Value);
-        }
-
-        var totalRecords = await query.Where(x => !x.IsDeleted).CountAsync();
-
-        var urls = await query
-            .Where(x => !x.IsDeleted)
-            .OrderByDescending(x => x.CreatedAt)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(x => new UrlGlobalDto
-            {
-                Id = x.Id,
-                Url = x.Url,
-                AuthorId = x.AuthorId,
-                CreatedAt = x.CreatedAt
-            })
-            .ToListAsync();
-
-
-        var result = new PagedResult<UrlGlobalDto>
-        {
-            CurrentPage = page,
+            Page = page,
             PageSize = pageSize,
-            TotalRecords = totalRecords,
-            Data = urls
+            AuthorId = authorId
         };
 
+        var result = await _mediator.Send(query);
         return Ok(result);
     }
 
@@ -102,47 +44,37 @@ public class UrlShortenerController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUrlDetails(int id)
     {
-        var url = await _context.URLs
-            .Include(x => x.Metadata)
-            .Include(x => x.Author) 
-            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+        var query = new GetUrlDetailsQuery { Id = id };
+        var urlDetails = await _mediator.Send(query);
 
-        if (url == null)
-            return NotFound("URL not found.");
-
-        var urlDetailsDto = new UrlDetailsDto
+        if (urlDetails == null)
         {
-            Id = url.Id,
-            Url = url.Url,
-            OriginUrl = url.OriginUrl,
-            CreatedAt = url.CreatedAt,
-            Metadata = url.Metadata,
-            Username = url.Author?.UserName, 
-            AuthorId = url.AuthorId
-        };
+            return NotFound("URL not found.");
+        }
 
-        return Ok(urlDetailsDto);
+        return Ok(urlDetails);
     }
 
     [HttpDelete("{id}")]
     [Authorize]
     public async Task<IActionResult> DeleteUrl(int id)
     {
-        var url = await _context.URLs
-            .Include(x => x.Author)
-            .FirstOrDefaultAsync(x => x.Id == id);
-
-        if (url == null || url.IsDeleted)
-            return NotFound("URL not found or already deleted.");
-
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         var isAdmin = User.IsInRole("Admin");
 
-        if (url.AuthorId != userId && !isAdmin)
-            return BadRequest("You are not authorized to delete this URL.");
+        var command = new DeleteUrlCommand
+        {
+            Id = id,
+            UserId = userId,
+            IsAdmin = isAdmin
+        };
 
-        url.IsDeleted = true;
-        await _context.SaveChangesAsync();
+        var result = await _mediator.Send(command);
+
+        if (!result)
+        {
+            return NotFound("URL not found or already deleted, or you are not authorized to delete this URL.");
+        }
 
         return Ok("The URL has been marked as deleted.");
     }

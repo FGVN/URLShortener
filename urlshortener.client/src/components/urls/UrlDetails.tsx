@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { fetchUrlDetails, UrlDetailsDto } from '../../api/apiService';
 import './UrlDetails.css';
-import DeleteButton from '../common/DeleteButton';
-import { getUserIdFromToken } from '../../utils/auth'
 
 const UrlDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [urlDetails, setUrlDetails] = useState<UrlDetailsDto | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
 
-    const currentUserSub = getUserIdFromToken();
 
     useEffect(() => {
         const loadUrlDetails = async () => {
@@ -35,8 +31,6 @@ const UrlDetails: React.FC = () => {
     if (!urlDetails) {
         return <div>Loading...</div>;
     }
-
-    const isAuthorized = currentUserSub === urlDetails.authorId;
 
     return (
         <div className="url-details-container">
@@ -68,14 +62,6 @@ const UrlDetails: React.FC = () => {
                         )}
                     </div>
                 </div>
-            )}
-
-            {isAuthorized && (
-                <DeleteButton
-                    urlId={urlDetails.id}
-                    onDeleteSuccess={() => navigate("/")}
-                    onDeleteError={(message: string) => setError(message)}
-                />
             )}
         </div>
     );
