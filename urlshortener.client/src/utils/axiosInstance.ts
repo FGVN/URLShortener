@@ -1,8 +1,4 @@
 import axios from 'axios';
-import { Cookies } from 'react-cookie'; // Import Cookies from react-cookie
-
-// Create a Cookies instance
-const cookies = new Cookies();
 
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_APP_API_URL || 'http://localhost:3000',
@@ -12,9 +8,9 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-    async (config) => {
-        // Access the cookie directly using the cookies instance
-        const token = cookies.get('authToken');
+    (config) => {
+        // Retrieve the token from localStorage
+        const token = localStorage.getItem('authToken');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -30,8 +26,8 @@ axiosInstance.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             console.error('Unauthorized access. Please log in.');
-            // Remove the cookie on 401 response
-            cookies.remove('authToken');
+            // Remove the token from localStorage on 401 response
+            localStorage.removeItem('authToken');
             window.location.href = '/login';
         } else {
             console.error('An error occurred:', error);
@@ -40,23 +36,23 @@ axiosInstance.interceptors.response.use(
     }
 );
 
-interface RegisterData {
-    login: string;
-    username: string;
-    password: string;
-}
 
-export const postRequest = async (url: string, data: RegisterData) => {
+export const fetchUrls = async (page: number, pageSize: number) => {
+    try {
+        const response = await axiosInstance.get(`/UrlShortener?page=${page}&pageSize=${pageSize}`);
+        return response.data; // Assuming the API returns data in the expected format
+    } catch (error) {
+        console.error('Failed to fetch URLs:', error);
+        throw error;
+    }
+};
+
+export const postRequest = async (url: string, data: object) => {
     try {
         const response = await axiosInstance.post(url, data);
         if (response.data && response.data.token) {
-            cookies.set('authToken', response.data.token, {
-                path: '/',
-                sameSite: 'lax',
-                secure: process.env.NODE_ENV === 'production',
-                httpOnly: false, 
-            });
-            console.log('Token cookie set successfully.');
+            localStorage.setItem('authToken', response.data.token);
+            console.log('Token saved to localStorage successfully.');
         }
 
         return response;

@@ -144,17 +144,4 @@ public class UrlShortenerController : ControllerBase
 
         return Ok("The URL has been marked as deleted.");
     }
-
-
-    [HttpGet("redirect/{shortUrl}")]
-    public async Task<IActionResult> RedirectToOriginal(string shortUrl)
-    {
-        var url = await _context.URLs.FirstOrDefaultAsync(x => x.Url == shortUrl && !x.IsDeleted);
-
-        if (url == null)
-            return NotFound("The URL has been deleted or does not exist.");
-
-        return Redirect(url.OriginUrl);
-    }
-
 }

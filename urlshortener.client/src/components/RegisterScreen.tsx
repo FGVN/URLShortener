@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import { postRequest } from '../utils/axiosInstance';
-import { useCookies } from 'react-cookie';
+import './RegisterScreen.css'; // Add this for the external CSS file
 
 interface RegisterScreenProps {
     onRegister: () => void;
 }
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
-    const [email, setEmail] = useState(''); // Set initial state from props or leave empty
-    const [username, setUsername] = useState(''); // Add state for username
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [passwordState, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
-
-    // Use the `useCookies` hook
-    const [cookies, setCookie] = useCookies(['authToken']);
 
     const handleRegister = async () => {
         if (passwordState !== confirmPassword) {
@@ -32,13 +29,12 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
             if (response.status === 201) {
                 console.log('Registration successful:', response.data);
 
-                // Store the token in a cookie using setCookie
                 const token = response.data.token;
                 if (token) {
-                    setCookie('authToken', token, { path: '/', maxAge: 60 * 60 * 24 * 7 }); // Expires in 7 days
+                    localStorage.setItem('authToken', token);
                 }
 
-                onRegister(); // Call the onRegister callback
+                onRegister();
             } else {
                 setError('Registration failed. Please try again.');
             }
@@ -49,7 +45,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
     };
 
     return (
-        <div>
+        <div className="register-screen">
             <h2>Register</h2>
             <input
                 type="text"
@@ -75,7 +71,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister }) => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            {error && <div style={{ color: 'red' }}>{error}</div>}
+            {error && <div className="error-message">{error}</div>}
             <button onClick={handleRegister}>Register</button>
         </div>
     );

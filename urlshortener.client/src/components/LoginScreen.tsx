@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axiosInstance from '../utils/axiosInstance'; 
+import axiosInstance from '../utils/axiosInstance';
+import './LoginScreen.css'; // Add this for the external CSS file
 
 interface LoginScreenProps {
     onLogin: () => void;
@@ -19,7 +20,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
             if (response.status === 200) {
                 console.log('Login successful:', response.data);
-                onLogin(); 
+
+                // Save token to localStorage
+                if (response.data.token) {
+                    localStorage.setItem('authToken', response.data.token);
+                    console.log('Token saved to localStorage.');
+                }
+
+                onLogin();
             } else {
                 setError('Login failed. Please check your credentials and try again.');
             }
@@ -30,7 +38,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
     };
 
     return (
-        <div>
+        <div className="login-screen">
             <h2>Login</h2>
             <input
                 type="email"
@@ -44,7 +52,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            {error && <div style={{ color: 'red' }}>{error}</div>}
+            {error && <div className="error-message">{error}</div>}
             <button onClick={handleLogin}>Login</button>
         </div>
     );

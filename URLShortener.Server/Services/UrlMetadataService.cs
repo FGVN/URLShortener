@@ -29,6 +29,9 @@ public class UrlMetadataService
             var json = await response.Content.ReadAsStringAsync();
             var metadata = JsonSerializer.Deserialize<UrlMetadata>(json);
 
+
+            Console.WriteLine("GOT RESPONSE WITH CONtENT: " + response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+            Console.WriteLine("DESER META Image: " + metadata.ImageUrl);
             if (metadata == null)
             {
                 throw new Exception("Failed to parse metadata response.");
